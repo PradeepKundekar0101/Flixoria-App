@@ -32,13 +32,16 @@ const login = () => {
         await storeToken(data.token)
         router.replace("(tabs)/home");
       },
-      onError: (data) => {},
+      onError: (error) => {
+        Alert.alert('Error', 'Failed to Login. Please try again.');
+        console.error('Account login error:', error);
+      },
     });
   };
   return (
     <View className="flex-1 justify-center p-4 bg-white">
       <Text className="text-2xl font-bold mb-6 text-center">
-        Create Account
+        Login
       </Text>
 
       <TextInput
@@ -60,7 +63,7 @@ const login = () => {
       {isPending ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <Button title="Create Account" onPress={handleSubmit} />
+        <Button title="Login" onPress={handleSubmit} />
       )}
 
       <Text className="text-center mt-6">

@@ -52,7 +52,7 @@ const CreateAccount = () => {
         value={formData.name}
         onChangeText={(value) => handleInputChange('name', value)}
       />
-
+  
       <TextInput
         className="border p-4 mb-4 rounded"
         placeholder="Email"
