@@ -1,27 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
-import { useVideoUpload } from '../../src/api/video';
-import { useQuery } from '@tanstack/react-query';
-import axiosInstance from '../../src/api/axiosInstance';
+import { useVideoUpload } from "../../src/api/video";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "../../src/api/axiosInstance";
 import SelectDropdown from "react-native-select-dropdown";
+import { FileImageIcon, FileVideoIcon, Video } from "lucide-react-native";
+import DropdownComponent from "../../src/components/ui/selector";
 
 const Upload = () => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
   const [video, setVideo] = useState(null);
-  const [categorySelected, setCategorySelected] = useState('');
+  const [categorySelected, setCategorySelected] = useState("");
+  const [categories, setCategories] = useState([]);
 
   const { uploadVideo, uploadStatus, isUploading } = useVideoUpload();
 
-  const { data: categoriesData, isLoading: isCategoriesLoading ,isError:isCategoriesError} = useQuery({
-    queryKey: ['categories'],
+  const {
+    data: categoriesData,
+    isLoading: isCategoriesLoading,
+    isError: isCategoriesError,
+  } = useQuery({
+    queryKey: ["categories"],
     queryFn: async () => {
-      return await axiosInstance.get('/category');
+      return (await axiosInstance.get("/category")).data;
     },
   });
+  useEffect(() => {
+    if (categoriesData && categoriesData.data) {
+      const formattedCategories = categoriesData.data.map((e) => ({
+        label: e.title, 
+        value: e.id, 
+      }));
+      setCategories(formattedCategories);
+    }
+  }, [categoriesData]);
 
   const pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -39,7 +65,7 @@ const Upload = () => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
-      aspect: [1, 1]
+      aspect: [1, 1],
     });
     if (!result.canceled) {
       setThumbnail(result.assets[0]);
@@ -48,28 +74,28 @@ const Upload = () => {
 
   const handleUpload = async () => {
     if (!video) {
-      Alert.alert('Please select a video');
+      Alert.alert("Please select a video");
       return;
     }
 
     if (!categorySelected) {
-      Alert.alert('Please select a category');
+      Alert.alert("Please select a category");
       return;
     }
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('categoryId', categorySelected);
-    formData.append('fileExtension', video.uri.split('.').pop());
-    formData.append('fileType', video.type);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("categoryId", categorySelected);
+    formData.append("fileExtension", video.uri.split(".").pop());
+    formData.append("fileType", video.type);
 
     if (thumbnail) {
       const imageUri = thumbnail.uri;
-      const imageName = imageUri.split('/').pop();
-      const imageType = 'image/' + imageName.split('.').pop();
+      const imageName = imageUri.split("/").pop();
+      const imageType = "image/" + imageName.split(".").pop();
 
-      formData.append('image', {
+      formData.append("image", {
         uri: imageUri,
         name: imageName,
         type: imageType,
@@ -80,86 +106,79 @@ const Upload = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Upload Video</Text>
+    <ScrollView className="bg-night px-4 py-2  h-full pb-10 ">
+      <Text className="text-springGreen" style={styles.title}>
+        Upload Video
+      </Text>
 
       <TextInput
-        style={styles.input}
+        className=" border-[1.6px] border-darkStroke text-white  placeholder:text-white px-3 py-2 text-lg rounded-md  mb-2 "
         onChangeText={setTitle}
         value={title}
         placeholder="Video Title"
+        placeholderTextColor="gray"
       />
 
       <TextInput
-        style={[styles.input, styles.textArea]}
+        className=" border-[1.6px] border-darkStroke text-white  placeholder:text-white px-3 py-2 text-lg rounded-md  mb-2  h-28"
+        placeholderTextColor="gray"
         onChangeText={setDescription}
         value={description}
         placeholder="Video Description"
         multiline
       />
-
-      <TouchableOpacity onPress={pickVideo} style={styles.button}>
-        <Text>{video ? 'Change Video' : 'Select Video'}</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={pickThumbnail} style={styles.button}>
-        <Text>{thumbnail ? 'Change Thumbnail' : 'Select Thumbnail'}</Text>
-      </TouchableOpacity>
-
-      {thumbnail && (
-        <Image
-          source={{ uri: thumbnail.uri }}
-          style={{ width: '100%', height: 200, marginBottom: 10 }}
-        />
-      )}
-
-{isCategoriesLoading ? (
+      {isCategoriesLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : isCategoriesError ? (
         <Text>Error loading categories</Text>
       ) : (
-        <SelectDropdown
-          data={categoriesData?.data?.data}
-          onSelect={(selectedItem) => {
-            setCategorySelected(selectedItem?.id);
-          }}
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || "Select category"}
-                </Text>
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View
-                style={{
-                  ...styles.dropdownItemStyle,
-                  ...(isSelected && { backgroundColor: "#D2D9DF" }),
-                }}
-              >
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
+        <View className="mb-2">
+          <DropdownComponent handleChange={(value)=>{setCategorySelected(value)}} data={categories} />
+        </View>
+      )}
+
+      <View className="  border-darkStroke border-[2.6px] h-28 flex items-center justify-center border-dotted mb-2">
+        <TouchableOpacity
+          className="bg-transparent flex items-center"
+          onPress={pickVideo}
+        >
+          <Text className=" text-lg  text-gray-400 px-3">
+            {video ? "Change Video" : "Select Video"}
+          </Text>
+          <FileVideoIcon color={"gray"} />
+        </TouchableOpacity>
+      </View>
+
+      <View className="  border-darkStroke border-[2.6px] h-28 flex items-center justify-center border-dotted mb-3">
+        <TouchableOpacity
+          className="bg-transparent flex items-center"
+          onPress={pickThumbnail}
+        >
+          <Text className=" text-lg  text-gray-400 px-3">
+            {thumbnail ? "Change Thumbnail" : "Select Thumbnail"}
+          </Text>
+          <FileImageIcon color={"gray"} />
+        </TouchableOpacity>
+      </View>
+      {thumbnail && (
+        <Image
+          source={{ uri: thumbnail.uri }}
+          style={{ width: "100%", height: 200, marginBottom: 10 }}
         />
       )}
 
-
       <TouchableOpacity
+        className="  border-springGreen border-[1px] py-2 rounded-md mb-4"
         onPress={handleUpload}
-        style={[styles.button, styles.uploadButton]}
         disabled={isUploading}
       >
-        <Text style={styles.uploadButtonText}>
-          {isUploading ? `${uploadStatus.status} (${uploadStatus.progress}%)` : 'Upload Video'}
+        <Text className="text-springGreen  text-center text-lg">
+          {isUploading
+            ? `${uploadStatus.status} (${uploadStatus.progress}%)`
+            : "Upload Video"}
         </Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -169,30 +188,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 5,
-  },
-  textArea: {
-    height: 80,
-  },
-  button: {
-    backgroundColor: '#ddd',
-    padding: 10,
-    marginBottom: 10,
-  },
+
   uploadButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
   },
   uploadButtonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
   categoryText: {
     fontSize: 18,
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: '100%',
+    width: "100%",
     marginBottom: 10,
   },
   dropdownButtonStyle: {

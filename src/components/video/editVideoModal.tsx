@@ -30,12 +30,12 @@ const EditVideoModal = ({ visible, onClose, video, onEdit }) => {
     },
   });
 
-  // Update categories state when categoryData is available
+
   useEffect(() => {
     if (categoryData && categoryData.data) {
       const formattedCategories = categoryData.data.map((e) => ({
-        label: e.title, // Label displayed in the dropdown
-        value: e.id,    // Value selected (assuming `id` is a unique identifier for categories)
+        label: e.title, 
+        value: e.id,    
       }));
       setCategories(formattedCategories);
     }
@@ -91,7 +91,7 @@ const EditVideoModal = ({ visible, onClose, video, onEdit }) => {
             {isCategoriesLoading ? (
               <Text>Loading Categories...</Text>
             ) : (
-              <DropdownComponent data={categories} />
+              <DropdownComponent handleChange={(val:string)=>{setCategory(val)}} data={categories} />
             )}
 
             <Text className="font-semibold mb-2">Thumbnail</Text>

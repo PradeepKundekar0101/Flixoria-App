@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../src/api/axiosInstance";
@@ -17,16 +17,14 @@ import CategoryItem from "../../src/components/video/categoryItem";
 const Home = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const { data: videosData,refetch:refetchVideos } = useQuery({
+  const { data: videosData, refetch: refetchVideos } = useQuery({
     queryKey: ["videos"],
     queryFn: async () => {
       return (await axiosInstance.get("/video")).data;
     },
   });
 
-  
-
-  const { data: categoryData,refetch:refetchCategories } = useQuery({
+  const { data: categoryData, refetch: refetchCategories } = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       return (await axiosInstance.get("/category")).data;
@@ -37,17 +35,18 @@ const Home = () => {
     await refetchVideos();
     await refetchCategories();
     setIsRefreshing(false);
-
   };
 
-  const renderCategoryItem = ({ item }) => (
-    <CategoryItem item={item}/>
-  );
+  const renderCategoryItem = ({ item }) => <CategoryItem item={item} />;
 
   const renderVideoItem = ({ item }) => (
     <View className="mb-4">
       <View className="relative">
-        <TouchableOpacity onPress={()=>{router.push("(tabs)/singleVideo/"+item.id)}}>
+        <TouchableOpacity
+          onPress={() => {
+            router.push("(tabs)/singleVideo/" + item.id);
+          }}
+        >
           <Image
             source={{ uri: item.thumbnail }}
             className="w-full h-48 rounded-lg"
@@ -65,11 +64,14 @@ const Home = () => {
   );
 
   return (
-    <ScrollView className="flex-1 bg-white" refreshControl={
-      <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
-    }>
+    <ScrollView
+      className="flex-1 bg-night"
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />
+      }
+    >
       <View className="p-4">
-        <Text className="text-2xl font-bold mb-4">Top Categories</Text>
+        <Text className="text-2xl font-bold mb-4 text-springGreen ">Top Categories</Text>
         <FlatList
           data={categoryData?.data || []}
           renderItem={renderCategoryItem}
@@ -80,9 +82,18 @@ const Home = () => {
       </View>
 
       <View className="p-4">
-        <Text className="text-2xl font-bold mb-4">Videos</Text>
+        <Text className="text-2xl font-bold mb-4 text-springGreen">Videos</Text>
         <FlatList
           data={videosData?.data || []}
+          ListEmptyComponent={
+            <View className=" items-center justify-center flex-1">
+              <Text className="text-slate-300 mb-1 text-lg">No Videos</Text>
+              <Text className="text-slate-400 mb-1 text-lg">Be the first one to upload</Text>
+              <TouchableOpacity onPress={()=>{router.push("upload")}} className=" border-springGreen border rounded-md px-3 py-1 text-lg">
+                <Text className="text-springGreen text-lg">Upload</Text>
+              </TouchableOpacity>
+            </View>
+          }
           renderItem={renderVideoItem}
           keyExtractor={(item) => item.id}
           scrollEnabled={false}

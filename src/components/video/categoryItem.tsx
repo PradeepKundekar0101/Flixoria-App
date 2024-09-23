@@ -9,7 +9,7 @@ const CategoryItem = ({item}:{item:any}) => {
           source={{ uri: item.thumbnail }}
           className="w-20 h-20 rounded-full"
         />
-        <Text className="mt-2 text-center">{item.title}</Text>
+        <Text className="mt-2 text-center text-white">{item.title}</Text>
       </TouchableOpacity>
   )
 }

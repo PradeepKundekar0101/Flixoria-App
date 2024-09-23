@@ -27,7 +27,7 @@ const SingleVideo = () => {
   });
 
   const renderVideoItem = ({ item }) => (
-   <VideoItemSm item={item}/>
+   <VideoItemSm item={item} self={undefined} onDelete={undefined} onEdit={undefined}/>
   );
 
   const SkeletonLoader = () => (

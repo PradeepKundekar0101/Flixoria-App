@@ -11,7 +11,7 @@ const TabsLayout = () => {
           source={icon}
           tintColor={color}
           resizeMode={"contain"}
-          className="w-6 h-6"
+          className="w-6 h-6 mb-1"
         />
         <Text style={{ color }}>{name}</Text>
       </View>
@@ -19,17 +19,17 @@ const TabsLayout = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-night">
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,
-          tabBarActiveTintColor: "#52b788",
+          tabBarActiveTintColor: "#13f287",
           tabBarInactiveTintColor: "#CDCDE0",
           tabBarStyle: {
-            backgroundColor: "#161622",
-            borderTopColor: "#232533",
+            backgroundColor: "#121212",
+            borderTopColor: "#121212",
             borderTopWidth: 1,
-            height: 76,
+            height: 36,
           },
         }}
         backBehavior="history"
@@ -59,7 +59,7 @@ const TabsLayout = () => {
               <TabIconComponent
                 name={"Upload"}
                 focused={focused}
-                icon={ICONS.journal}
+                icon={ICONS.plus}
                 color={color}
               />
             ),
@@ -82,27 +82,25 @@ const TabsLayout = () => {
           }}
         />
 
-<Tabs.Screen
-              name="singleVideo/[id]"
-              options={{
-                title: "Videos",
-                href: null,
-                headerShown: false,
-                tabBarHideOnKeyboard: true,
-              }}
-            />
+        <Tabs.Screen
+          name="singleVideo/[id]"
+          options={{
+            title: "Videos",
+            href: null,
+            headerShown: false,
+            tabBarHideOnKeyboard: true,
+          }}
+        />
 
-<Tabs.Screen
-              name="singleCategory/[id]"
-              options={{
-                title: "Categories",
-                href: null,
-                headerShown: false,
-                tabBarHideOnKeyboard: true,
-              }}
-            />
-
-
+        <Tabs.Screen
+          name="singleCategory/[id]"
+          options={{
+            title: "Categories",
+            href: null,
+            headerShown: false,
+            tabBarHideOnKeyboard: true,
+          }}
+        />
       </Tabs>
     </SafeAreaView>
   );

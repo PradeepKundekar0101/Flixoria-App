@@ -13,7 +13,8 @@ export const ICONS = {
   journal: require("../../assets/icons/bookmark.png"),
   mentor: require("../../assets/icons/profile.png"),
   profile: require("../../assets/icons/menu.png"),
-  broker: require("../../assets/icons/plus.png"),
+  // broker: require("../../assets/icons/plus.png"),
+  plus: require("../../assets/icons/plus.png"),
   // main_profile: require("../../assets/icons/plus.png"),
-
+  logo_transparent: require("../../assets/logo/flixoria_logo_transparent.png")
 };
