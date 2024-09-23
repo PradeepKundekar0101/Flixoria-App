@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { Picker } from '@react-native-picker/picker';
+
 import { useVideoUpload } from '../../src/api/video';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../src/api/axiosInstance';
 import SelectDropdown from "react-native-select-dropdown";
-
-
 
 const Upload = () => {
   const [title, setTitle] = useState('');

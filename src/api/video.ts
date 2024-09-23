@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import axiosInstance from './axiosInstance';
 import * as FileSystem from 'expo-file-system';
 
@@ -94,3 +94,15 @@ export const useVideoUpload = () => {
     processingVideos,
   };
 };
+
+export const useVideoCRUD = ()=>{
+  const getVideosFeed = useQuery({
+    queryKey:["feedvideos"],
+    queryFn:async()=>{
+      return await axiosInstance.get("/video");
+    }
+  })
+  return {
+    getVideosFeed
+  }
+}

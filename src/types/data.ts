@@ -9,4 +9,5 @@ interface Video{
     description:string,
     thumbnail:string,
     url:string
+    createdAt: Date
 }
