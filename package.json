@@ -30,7 +30,8 @@
     "react-native-screens": "3.31.1",
     "react-native-select-dropdown": "^4.0.1",
     "typescript": "~5.3.3",
-    "zustand": "^5.0.0-rc.2"
+    "zustand": "^5.0.0-rc.2",
+    "expo-av": "~14.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

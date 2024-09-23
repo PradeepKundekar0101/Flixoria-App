@@ -81,6 +81,28 @@ const TabsLayout = () => {
             ),
           }}
         />
+
+<Tabs.Screen
+              name="singleVideo/[id]"
+              options={{
+                title: "Videos",
+                href: null,
+                headerShown: false,
+                tabBarHideOnKeyboard: true,
+              }}
+            />
+
+<Tabs.Screen
+              name="singleCategory/[id]"
+              options={{
+                title: "Categories",
+                href: null,
+                headerShown: false,
+                tabBarHideOnKeyboard: true,
+              }}
+            />
+
+
       </Tabs>
     </SafeAreaView>
   );

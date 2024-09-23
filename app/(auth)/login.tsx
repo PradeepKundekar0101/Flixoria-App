@@ -27,8 +27,8 @@ const login = () => {
     }
     mutate(formData, {
       onSuccess: async (data: any) => {
-        setToken("");
-        setUser({ email: "", userName: "",id:'' });
+        setToken(data.data?.token);
+        setUser({ email: data.data?.user?.email, userName: data.data?.user?.userName,id:data.data?.user?.id });
         await storeToken(data.data?.token)
         router.replace("(tabs)/home");
       },
