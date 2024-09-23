@@ -10,7 +10,7 @@ import {
 import { useCreateAccount } from "../../src/api/auth";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "../../src/store/authStore";
-import { storeToken } from "../../src/utils/storage";
+import { storeToken, storeUser } from "../../src/utils/storage";
 
 const CreateAccount = () => {
   const { setToken, setUser } = useAuthStore();
@@ -39,6 +39,7 @@ const CreateAccount = () => {
         setToken(data.token);
         setUser(data.user);
         await storeToken(data.data?.token);
+        await storeUser(data.data?.user)
         router.replace("(tabs)/home");
       },
       onError: (error) => {

@@ -11,7 +11,7 @@ import { useAuthStore } from "../../src/store/authStore";
 import { useLogin } from "../../src/api/auth";
 import { useState } from "react";
 import { router } from "expo-router";
-import {storeToken} from "../../src/utils/storage"
+import {storeToken, storeUser} from "../../src/utils/storage"
 const login = () => {
   const [formData, setFormData] = useState<{ email: string; password: string }>(
     { email: "", password: "" }
@@ -30,6 +30,7 @@ const login = () => {
         setToken(data.data?.token);
         setUser({ email: data.data?.user?.email, userName: data.data?.user?.userName,id:data.data?.user?.id });
         await storeToken(data.data?.token)
+        await storeUser(data.data?.user)
         router.replace("(tabs)/home");
       },
       onError: (error) => {

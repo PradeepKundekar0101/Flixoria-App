@@ -10,4 +10,6 @@ interface Video{
     thumbnail:string,
     url:string
     createdAt: Date
+    views:number
+    userId:string
 }

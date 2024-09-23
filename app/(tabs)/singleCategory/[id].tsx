@@ -27,12 +27,12 @@ const SingleCategory = () => {
     enabled: !!id,
   });
 
-  const renderVideoItem = ({ item }) => <VideoItemSm item={item} />;
+  const renderVideoItem = ({ item }) => <VideoItemSm self={false} item={item} onDelete={undefined} onEdit={undefined} />;
 
   const SkeletonLoader = () => (
     <>
     {skeletonVideosItemSM()}
-    {videoSkeleton()}
+
     </>
   );
 

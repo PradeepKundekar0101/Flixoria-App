@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getToken } from '../utils/storage'; 
+import { getToken, getUser } from '../utils/storage'; 
 
 interface AuthState {
   token: string | null;
@@ -7,6 +7,7 @@ interface AuthState {
   setToken: (token: string) => void;
   setUser: (user: User) => void;
   loadTokenFromStorage: () => Promise<void>; 
+  loadUserFromStorage: () => Promise<void>; 
   clearAuth: () => void;
 }
 
@@ -20,6 +21,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     const storedToken = await getToken(); 
     if (storedToken) {
       set({ token: storedToken });
+    }
+  },
+  loadUserFromStorage: async () => {
+    const storedUser = await getUser(); 
+    if (storedUser) {
+      set({ user: JSON.parse(storedUser) });
     }
   },
 }));

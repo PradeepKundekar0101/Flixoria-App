@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Redirect, Slot, useRouter } from 'expo-router';
+import {  Slot, useRouter } from 'expo-router';
 import { useAuthStore } from '../src/store/authStore';
 
 const Index = () => {
@@ -9,7 +9,7 @@ const Index = () => {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      await loadTokenFromStorage(); // Load the token from storage when the app starts
+      await loadTokenFromStorage(); 
       setIsReady(true);
     };
 
