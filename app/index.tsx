@@ -1,27 +1,32 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
+import { Redirect, Slot, useRouter } from 'expo-router';
 import { useAuthStore } from '../src/store/authStore';
 
 const Index = () => {
-  const { token } = useAuthStore();
+  const { token, loadTokenFromStorage } = useAuthStore();
   const router = useRouter();
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setIsReady(true);
+    const initializeAuth = async () => {
+      await loadTokenFromStorage(); // Load the token from storage when the app starts
+      setIsReady(true);
+    };
+
+    initializeAuth();
   }, []);
 
   useEffect(() => {
     if (isReady) {
       if (token) {
-        router.push("(tabs)/home");  // Ensure it routes correctly to home
+        router.push("(tabs)/home");  
       } else {
-        router.replace('(auth)/login');  // Ensure it goes to login screen
+        router.replace('(auth)/login');  
       }
     }
   }, [isReady, token]);
 
-  return null; 
+  return <Slot />;
 };
 
 export default Index;

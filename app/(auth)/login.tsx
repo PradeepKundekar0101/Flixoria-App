@@ -28,8 +28,8 @@ const login = () => {
     mutate(formData, {
       onSuccess: async (data: any) => {
         setToken("");
-        setUser({ email: "", name: "" });
-        await storeToken(data.token)
+        setUser({ email: "", userName: "",id:'' });
+        await storeToken(data.data?.token)
         router.replace("(tabs)/home");
       },
       onError: (error) => {
@@ -67,12 +67,12 @@ const login = () => {
       )}
 
       <Text className="text-center mt-6">
-        Already have an account?{" "}
+        Don't have an account?{" "}
         <Text
           className="text-blue-600"
-          onPress={() => router.replace("(auth)/login")}
+          onPress={() => router.replace("(auth)/createAccount")}
         >
-          Log In
+          Create
         </Text>
       </Text>
     </View>

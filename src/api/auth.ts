@@ -29,10 +29,10 @@ export const useCreateAccount = () => {
     mutationFn: async (accountData: {
       email: string;
       password: string;
-      name: string;
+      userName: string;
     }) => {
       const response = await axiosInstance.post(
-        "/user/createAccount",
+        "/user/createUser",
         accountData
       );
       return response.data;
