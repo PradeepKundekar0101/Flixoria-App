@@ -19,7 +19,8 @@ import {
   skeletonVideosItemSM,
 } from "../../../src/components/video/skeletonVideosItemSM";
 const SingleCategory = () => {
-  const { id } = useLocalSearchParams();
+  const { id,title } = useLocalSearchParams();
+
   const {
     data: videoData,
     isLoading: isVideoLoading,
@@ -40,7 +41,10 @@ const SingleCategory = () => {
     />
   );
 
-  const SkeletonLoader = () => <>{skeletonVideosItemSM()}</>;
+  const SkeletonLoader = () =><>
+  <View className=" bg-night pt-10"></View>
+  {skeletonVideosItemSM()}
+  </> 
 
   if (isVideoLoading) return <SkeletonLoader />;
 
@@ -64,7 +68,7 @@ const SingleCategory = () => {
 
       <View className="px-4">
         <Text className="text-lg font-semibold mb-4 text-springGreen">
-          Categories
+          {title}
         </Text>
         {isVideoLoading ? (
           <SkeletonLoader />

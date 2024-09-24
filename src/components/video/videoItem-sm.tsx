@@ -36,8 +36,8 @@ const VideoItemSm = ({ item, self, onDelete, onEdit }) => {
           <View className='flex flex-row justify-between'>
 
         <View className="flex-1 space-y-1">
-          <Text className="font-semibold" numberOfLines={2}>{item.title}</Text>
-          <Text className="font-light" numberOfLines={1}>{item.description}</Text>
+          <Text className="font-semibold text-slate-200" numberOfLines={2}>{item.title}</Text>
+          <Text className="font-light text-slate-300" numberOfLines={1}>{item.description}</Text>
         </View>
           {self && (
             <TouchableOpacity onPress={() => setMenuVisible(true)}>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axiosInstance from './axiosInstance';
 import * as FileSystem from 'expo-file-system';
 
@@ -16,7 +16,7 @@ interface UploadResponse {
 }
 
 interface UploadStatus {
-  status: 'idle' | 'uploading' | 'processing' | 'completed' | 'error';
+  status: 'idle' | 'started' | 'uploading' | 'processing' | 'completed' | 'error';
   progress: number;
 }
 
@@ -27,6 +27,7 @@ export const useVideoUpload = () => {
   const uploadMutation = useMutation({
     mutationKey: ['uploadVideo'],
     mutationFn: async (data: { formData: FormData; videoUri: string }) => {
+      setUploadStatus({ status: 'started', progress: 10 });
       const response = await axiosInstance.post<{ data: UploadResponse }>('/video/', data.formData);
       return { ...response.data.data, videoUri: data.videoUri };
     },
@@ -43,7 +44,7 @@ export const useVideoUpload = () => {
     const { preSignedUrl, video, videoUri } = response;
     
     try {
-      setUploadStatus({ status: 'uploading', progress: 0 });
+      setUploadStatus({ status: 'uploading', progress: 20 });
 
       const uploadResult = await FileSystem.uploadAsync(preSignedUrl, videoUri, {
         httpMethod: 'PUT',
@@ -54,7 +55,7 @@ export const useVideoUpload = () => {
         throw new Error(`Upload failed with status ${uploadResult.status}`);
       }
 
-      setUploadStatus({ status: 'processing', progress: 100 });
+      setUploadStatus({ status: 'processing', progress: 80 });
       setProcessingVideos(prev => [...prev, video.id]);
       await pollVideoStatus(video.id);
 
@@ -70,8 +71,11 @@ export const useVideoUpload = () => {
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       try {
+        console.log("Polling attempt: " + attempt);
         const response = await axiosInstance.get(`/video/${videoId}`);
-        if (response.data?.data?.video?.url) {
+        console.log("Video status:", response.data?.data?.url ? "Ready" : "Processing");
+        
+        if (response.data?.data?.url) {
           setUploadStatus({ status: 'completed', progress: 100 });
           setProcessingVideos(prev => prev.filter(id => id !== videoId));
           return;
@@ -90,19 +94,9 @@ export const useVideoUpload = () => {
   return {
     uploadVideo: uploadMutation.mutate,
     uploadStatus,
-    isUploading: uploadMutation.isPending || uploadStatus.status === 'processing',
+    isUploadError: uploadMutation.isError,
+    uploadError: uploadMutation.error,
+    isUploading: uploadStatus.status !== 'idle' && uploadStatus.status !== 'completed' && uploadStatus.status !== 'error',
     processingVideos,
   };
 };
-
-export const useVideoCRUD = ()=>{
-  const getVideosFeed = useQuery({
-    queryKey:["feedvideos"],
-    queryFn:async()=>{
-      return await axiosInstance.get("/video");
-    }
-  })
-  return {
-    getVideosFeed
-  }
-}

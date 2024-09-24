@@ -11,13 +11,16 @@ import {
   ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+// import { useNavigation } from "@react-navigation/native";
 
 import { useVideoUpload } from "../../src/api/video";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../src/api/axiosInstance";
-import SelectDropdown from "react-native-select-dropdown";
-import { FileImageIcon, FileVideoIcon, Video } from "lucide-react-native";
+
+import { FileImageIcon, FileVideoIcon } from "lucide-react-native";
 import DropdownComponent from "../../src/components/ui/selector";
+import UploadStatusIndicator from "../../src/components/ui/statusIndicator";
+import { router } from "expo-router";
 
 const Upload = () => {
   const [title, setTitle] = useState("");
@@ -26,6 +29,8 @@ const Upload = () => {
   const [video, setVideo] = useState(null);
   const [categorySelected, setCategorySelected] = useState("");
   const [categories, setCategories] = useState([]);
+
+
 
   const { uploadVideo, uploadStatus, isUploading } = useVideoUpload();
 
@@ -39,6 +44,7 @@ const Upload = () => {
       return (await axiosInstance.get("/category")).data;
     },
   });
+
   useEffect(() => {
     if (categoriesData && categoriesData.data) {
       const formattedCategories = categoriesData.data.map((e) => ({
@@ -48,6 +54,27 @@ const Upload = () => {
       setCategories(formattedCategories);
     }
   }, [categoriesData]);
+
+  useEffect(() => {
+    if (uploadStatus.status === 'completed') {
+      Alert.alert(
+        "Upload Successful",
+        "Your video has been uploaded successfully!",
+        [
+          { text: "OK", onPress: () => router.push("(tabs)/profile") }
+        ]
+      );
+      clearFields();
+    }
+  }, [uploadStatus]);
+
+  const clearFields = () => {
+    setTitle("");
+    setDescription("");
+    setThumbnail(null);
+    setVideo(null);
+    setCategorySelected("");
+  };
 
   const pickVideo = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -106,21 +133,24 @@ const Upload = () => {
   };
 
   return (
-    <ScrollView className="bg-night px-4 py-2  h-full pb-10 ">
+    <ScrollView className="bg-night px-4 pt-8 pb-2 h-full ">
       <Text className="text-springGreen" style={styles.title}>
         Upload Video
       </Text>
 
+      {isUploading && <UploadStatusIndicator status={uploadStatus.status} />}
+
       <TextInput
-        className=" border-[1.6px] border-darkStroke text-white  placeholder:text-white px-3 py-2 text-lg rounded-md  mb-2 "
+        className="border border-darkStroke text-white placeholder:text-white px-3 py-2 text-lg rounded-md mb-2"
         onChangeText={setTitle}
         value={title}
         placeholder="Video Title"
         placeholderTextColor="gray"
+        
       />
 
       <TextInput
-        className=" border-[1.6px] border-darkStroke text-white  placeholder:text-white px-3 py-2 text-lg rounded-md  mb-2  h-28"
+        className="border border-darkStroke text-white placeholder:text-white px-3 py-2 text-lg rounded-md mb-2 h-28"
         placeholderTextColor="gray"
         onChangeText={setDescription}
         value={description}
@@ -137,24 +167,24 @@ const Upload = () => {
         </View>
       )}
 
-      <View className="  border-darkStroke border-[2.6px] h-28 flex items-center justify-center border-dotted mb-2">
+      <View className="border-darkStroke border h-28 flex items-center justify-center border-dotted mb-2">
         <TouchableOpacity
           className="bg-transparent flex items-center"
           onPress={pickVideo}
         >
-          <Text className=" text-lg  text-gray-400 px-3">
+          <Text className="text-lg text-gray-400 px-3">
             {video ? "Change Video" : "Select Video"}
           </Text>
           <FileVideoIcon color={"gray"} />
         </TouchableOpacity>
       </View>
 
-      <View className="  border-darkStroke border-[2.6px] h-28 flex items-center justify-center border-dotted mb-3">
+      <View className="border-darkStroke border h-28 flex items-center justify-center border-dotted mb-3">
         <TouchableOpacity
           className="bg-transparent flex items-center"
           onPress={pickThumbnail}
         >
-          <Text className=" text-lg  text-gray-400 px-3">
+          <Text className="text-lg text-gray-400 px-3">
             {thumbnail ? "Change Thumbnail" : "Select Thumbnail"}
           </Text>
           <FileImageIcon color={"gray"} />
@@ -168,14 +198,12 @@ const Upload = () => {
       )}
 
       <TouchableOpacity
-        className="  border-springGreen border-[1px] py-2 rounded-md mb-4"
+        className="border-springGreen border-[1px] py-2 rounded-md mb-4"
         onPress={handleUpload}
         disabled={isUploading}
       >
-        <Text className="text-springGreen  text-center text-lg">
-          {isUploading
-            ? `${uploadStatus.status} (${uploadStatus.progress}%)`
-            : "Upload Video"}
+        <Text className="text-springGreen text-center text-lg">
+          {isUploading ? "Uploading..." : "Upload Video"}
         </Text>
       </TouchableOpacity>
     </ScrollView>
@@ -183,75 +211,10 @@ const Upload = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-  },
-
-  uploadButton: {
-    backgroundColor: "#007AFF",
-  },
-  uploadButtonText: {
-    color: "white",
-    textAlign: "center",
-  },
-  categoryText: {
-    fontSize: 18,
-    marginVertical: 5,
-  },
-  picker: {
-    height: 50,
-    width: "100%",
-    marginBottom: 10,
-  },
-  dropdownButtonStyle: {
-    width: 200,
-    height: 50,
-    backgroundColor: "#E9ECEF",
-    borderRadius: 12,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 12,
-  },
-  dropdownButtonTxtStyle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#151E26",
-  },
-  dropdownButtonArrowStyle: {
-    fontSize: 28,
-  },
-  dropdownButtonIconStyle: {
-    fontSize: 28,
-    marginRight: 8,
-  },
-  dropdownMenuStyle: {
-    backgroundColor: "#E9ECEF",
-    borderRadius: 8,
-  },
-  dropdownItemStyle: {
-    width: "100%",
-    flexDirection: "row",
-    paddingHorizontal: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 8,
-  },
-  dropdownItemTxtStyle: {
-    flex: 1,
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#151E26",
-  },
-  dropdownItemIconStyle: {
-    fontSize: 28,
-    marginRight: 8,
   },
 });
 

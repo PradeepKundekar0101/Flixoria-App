@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { getToken, getUser } from '../utils/storage'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AuthState {
   token: string | null;
@@ -16,7 +17,18 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   setToken: (token) => set({ token }),
   setUser: (user: User) => set({ user }),
-  clearAuth: () => set({ token: null, user: null }),
+  clearAuth: async () => {
+    // Clear the state
+    set({ token: null, user: null });
+    
+    // Also clear the AsyncStorage
+    try {
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('user');
+    } catch (error) {
+      console.log('Error clearing storage:', error);
+    }
+  },
   loadTokenFromStorage: async () => {
     const storedToken = await getToken(); 
     if (storedToken) {

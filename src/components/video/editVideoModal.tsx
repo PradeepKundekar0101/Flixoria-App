@@ -62,44 +62,44 @@ const EditVideoModal = ({ visible, onClose, video, onEdit }) => {
   };
 
   return (
-    <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <SafeAreaView className="flex-1 bg-white">
+    <Modal className=" bg-night" visible={visible} animationType="slide" onRequestClose={onClose}>
+      <SafeAreaView className="flex-1 bg-night">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           className="flex-1"
         >
           <ScrollView className="flex-1 p-4 mt-12">
-            <Text className="text-2xl font-bold mb-4">Edit Video</Text>
+            <Text className="text-2xl font-bold mb-4 text-white">Edit Video</Text>
 
-            <Text className="font-semibold mb-2">Title</Text>
+            <Text className="font-semibold mb-2 text-white">Title</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-2 mb-4"
+              className="border border-gray-300 rounded-lg p-2 mb-4 text-white"
               value={title}
               onChangeText={setTitle}
             />
 
-            <Text className="font-semibold mb-2">Description</Text>
+            <Text className="font-semibold mb-2 text-white">Description</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg p-2 mb-4"
+              className="border border-gray-300 rounded-lg p-2 mb-4 text-white"
               value={description}
               onChangeText={setDescription}
               multiline
               numberOfLines={4}
             />
 
-            <Text className="font-semibold mb-2">Category</Text>
+            <Text className="font-semibold mb-2 text-white">Category</Text>
             {isCategoriesLoading ? (
               <Text>Loading Categories...</Text>
             ) : (
               <DropdownComponent handleChange={(val:string)=>{setCategory(val)}} data={categories} />
             )}
 
-            <Text className="font-semibold mb-2">Thumbnail</Text>
+            <Text className="font-semibold mb-2 text-white mt-3">Thumbnail</Text>
             <TouchableOpacity
-              className="bg-blue-500 p-2 rounded-lg mb-4"
+              className="  border-white border  p-2 rounded-md mb-4"
               onPress={pickImage}
             >
-              <Text className="text-white text-center">
+              <Text className=" text-white text-center">
                 Choose New Thumbnail
               </Text>
             </TouchableOpacity>
@@ -112,10 +112,10 @@ const EditVideoModal = ({ visible, onClose, video, onEdit }) => {
                 <Text>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="bg-blue-500 p-2 rounded-lg"
+                className="border-springGreen border p-2 rounded-lg"
                 onPress={handleSubmit}
               >
-                <Text className="text-white">Save Changes</Text>
+                <Text className="text-springGreen">Save Changes</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
