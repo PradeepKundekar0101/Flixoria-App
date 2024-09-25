@@ -1,8 +1,6 @@
 # Flixoria - Video sharing application
 
-## Screenshots
-<img width="348" alt="Screenshot 2024-09-24 at 9 35 26 PM" src="https://github.com/user-attachments/assets/fe43c691-3b46-4cd6-9192-1c7a97953fa1">
-<img width="347" alt="Screenshot 2024-09-24 at 9 19 24 PM" src="https://github.com/user-attachments/assets/992a8793-b60f-4427-b8a2-48bfd94d2820">
+## Screenshots![thumnail](https://github.com/user-attachments/assets/7aeba9f9-d66c-4c5c-a566-e3ac2c2c097e)
 <img width="353" alt="Screenshot 2024-09-24 at 9 17 29 PM" src="https://github.com/user-attachments/assets/8a6d7075-ee6e-446d-afd4-365f4f318d40">
 <img width="342" alt="Screenshot 2024-09-24 at 9 22 17 PM" src="https://github.com/user-attachments/assets/82a4a5cc-37c8-4c79-b25e-8ed2a760aab9">
 
