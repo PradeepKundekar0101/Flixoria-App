@@ -43,3 +43,7 @@ This project is a full-stack video sharing application developed using **React N
 - **Search Functionality:** Quickly find videos by keywords or tags.
 - **Responsive Design:** The application is designed to work on both mobile and tablet devices.
 
+Backend Repo: https://github.com/PradeepKundekar0101/Flixoria-Backend
+
+VideoTranscoder Docker file: https://github.com/PradeepKundekar0101/video-transcoder-postgres
+
